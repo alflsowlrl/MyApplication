@@ -1,12 +1,21 @@
 package com.example.myapplication
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.custom_tab_button.view.*
+import kotlinx.android.synthetic.main.phone_tab.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var mContext : Context
@@ -14,6 +23,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        checkPermission()
 
         mContext = applicationContext
         initViewPager() // 뷰페이저와 어댑터 장착
@@ -46,7 +57,7 @@ class MainActivity : AppCompatActivity() {
         searchFragment.name = "찾기 창"
         val cameraFragment = FragmentTab()
         cameraFragment.name = "사진 창"
-        val callFragment = FragmentTab()
+        val callFragment = PhoneTab(this)
         callFragment.name = "전화 창"
 
 
@@ -71,5 +82,33 @@ class MainActivity : AppCompatActivity() {
 //            override fun onTabSelected(p0: TabLayout.Tab?) {}
 //        })
 
+    }
+
+    fun checkPermission() {
+        // 1. 위험권한(Camera) 권한 승인상태 가져오기
+        val cameraPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)
+
+        if (cameraPermission != PackageManager.PERMISSION_GRANTED) {
+            requestPermission()
+        }
+    }
+
+    fun requestPermission() {
+        // 2. 권한 요청
+        ActivityCompat.requestPermissions( this, arrayOf(Manifest.permission.READ_CONTACTS), 99)
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        when(requestCode) {
+            99 -> {
+                if(grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    finish()
+                }
+            }
+        }
     }
 }

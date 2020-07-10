@@ -3,13 +3,10 @@ package com.example.myapplication
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.provider.ContactsContract
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.sqlite.Memo
 import com.example.sqlite.SqliteHelper
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import java.util.ArrayList
 
 
 class MemoTab(activity: Activity): FragmentTab(){
@@ -48,7 +44,7 @@ class MemoTab(activity: Activity): FragmentTab(){
 
         Log.d("myApp", "size: ${memoAdapter.listData.size}")
 
-        val floatingButton = view.findViewById<FloatingActionButton>(R.id.floating)
+        val floatingButton = view.findViewById<FloatingActionButton>(R.id.memoFloating)
         floatingButton.setOnClickListener {
             val intent = Intent(parentActivity, MemoAddActivity::class.java)
             parentActivity.startActivityForResult(intent, MEMO_REQUEST_CODE)

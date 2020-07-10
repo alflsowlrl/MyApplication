@@ -8,13 +8,13 @@
 
 
     <EditText
-        android:id="@+id/title_text"
+        android:id="@+id/memoAddTextTitle"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:hint="제목"/>
 
     <Button
-        android:id="@+id/addFinish"
+        android:id="@+id/memoAddFinish"
         android:text="메모작성"
         android:layout_width="150dp"
         android:layout_centerInParent="true"

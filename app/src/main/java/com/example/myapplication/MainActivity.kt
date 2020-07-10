@@ -1,24 +1,31 @@
 package com.example.myapplication
 
 import android.Manifest
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.Button
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.sqlite.SqliteHelper
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.custom_tab_button.view.*
 import kotlinx.android.synthetic.main.phone_tab.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var mContext : Context
+    private var memoTab: MemoTab = MemoTab(this)
+    var helper = SqliteHelper(this, "memo", 1)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +35,7 @@ class MainActivity : AppCompatActivity() {
 
         mContext = applicationContext
         initViewPager() // 뷰페이저와 어댑터 장착
+
     }
 
     private fun createView(tabName: String): View {
@@ -53,12 +61,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
     private fun initViewPager(){
-        val searchFragment = FragmentTab()
+        memoTab = MemoTab(this)
+        val searchFragment = memoTab
         searchFragment.name = "찾기 창"
+
         val cameraFragment = FragmentTab()
         cameraFragment.name = "사진 창"
         val callFragment = PhoneTab(this)
         callFragment.name = "전화 창"
+
 
 
         val adapter = PageAdapter(supportFragmentManager) // PageAdapter 생성
@@ -84,6 +95,15 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if(requestCode == MemoTab.MEMO_REQUEST_CODE && resultCode == Activity.RESULT_OK){
+            memoTab?.ActivityResult(requestCode, resultCode, data)
+       }
+    }
+
     fun checkPermission() {
         // 1. 위험권한(Camera) 권한 승인상태 가져오기
         val cameraPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)
@@ -95,7 +115,7 @@ class MainActivity : AppCompatActivity() {
 
     fun requestPermission() {
         // 2. 권한 요청
-        ActivityCompat.requestPermissions( this, arrayOf(Manifest.permission.READ_CONTACTS), 99)
+        ActivityCompat.requestPermissions( this, arrayOf(Manifest.permission.READ_CONTACTS), MemoTab.MEMO_REQUEST_CODE)
     }
 
     override fun onRequestPermissionsResult(
@@ -111,4 +131,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+
+
+
 }

@@ -9,7 +9,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sqlite.Memo
 import com.example.sqlite.SqliteHelper
-import io.realm.Realm
 import kotlinx.android.synthetic.main.memo_item.view.*
 import kotlinx.android.synthetic.main.phone_recycler.view.*
 

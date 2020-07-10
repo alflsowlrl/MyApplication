@@ -27,5 +27,4 @@
         app:tabMode="fixed">
 
     </com.google.android.material.tabs.TabLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

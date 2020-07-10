@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.sqlite.Memo
 import com.example.sqlite.SqliteHelper
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import io.realm.Realm
 import java.util.ArrayList
 
 

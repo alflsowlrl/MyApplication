@@ -10,8 +10,8 @@
     <EditText
         android:id="@+id/memoAddTextTitle"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:hint="제목"/>
+        android:layout_height="100dp"
+        android:hint="제목" />
 
     <Button
         android:id="@+id/memoAddFinish"

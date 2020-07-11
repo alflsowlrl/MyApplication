@@ -43,8 +43,8 @@ class MainActivity : AppCompatActivity() {
 
         tabView.tab_text.text = tabName
         when (tabName) {
-            "찾기" -> {
-                tabView.tab_logo.setImageResource(android.R.drawable.ic_menu_search)
+            "메모" -> {
+                tabView.tab_logo.setImageResource(android.R.drawable.ic_menu_edit)
                 return tabView
             }
             "사진" -> {
@@ -63,9 +63,9 @@ class MainActivity : AppCompatActivity() {
     private fun initViewPager(){
         memoTab = MemoTab(this)
         val searchFragment = memoTab
-        searchFragment.name = "찾기 창"
+        searchFragment.name = "메모 창"
 
-        val cameraFragment = FragmentTab()
+        val cameraFragment = GalleryTab(this)
         cameraFragment.name = "사진 창"
         val callFragment = PhoneTab(this)
         callFragment.name = "전화 창"
@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity() {
         main_tablayout.setupWithViewPager(main_viewPager) // 탭레이아웃과 뷰페이저를 연동
 
 
-        main_tablayout.getTabAt(0)?.setCustomView(createView("찾기"))
+        main_tablayout.getTabAt(0)?.setCustomView(createView("메모"))
         main_tablayout.getTabAt(1)?.setCustomView(createView("사진"))
         main_tablayout.getTabAt(2)?.setCustomView(createView("전화"))
 
@@ -106,7 +106,7 @@ class MainActivity : AppCompatActivity() {
 
     fun checkPermission() {
         // 1. 위험권한(Camera) 권한 승인상태 가져오기
-        val permissions = arrayOf(Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS)
+        val permissions = arrayOf(Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS, Manifest.permission.READ_EXTERNAL_STORAGE)
         val premissionInRequest: MutableList<String> = mutableListOf()
 
         for(permission in permissions){
@@ -135,9 +135,11 @@ class MainActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         when(requestCode) {
-            99 -> {
-                if(grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    finish()
+            MemoTab.MEMO_REQUEST_CODE -> {
+                for (grantResult in grantResults) {
+                    if (grantResult == PackageManager.PERMISSION_DENIED) {
+                        finish()
+                    }
                 }
             }
         }

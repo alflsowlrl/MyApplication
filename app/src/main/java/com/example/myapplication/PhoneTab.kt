@@ -5,6 +5,7 @@ import android.content.Intent
 import android.database.Cursor
 import android.os.Bundle
 import android.provider.ContactsContract
+import android.telephony.PhoneNumberUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -75,14 +76,12 @@ class PhoneTab(activity: Activity): FragmentTab(){
                 val id = cursor.getInt(idColumn)
                 val name = cursor.getString(nameTakenColumn)
                 val TempPhone = cursor.getString(phoneColumn).replace("-", "")
-                var phone = TempPhone
+                var phone = PhoneNumberUtils.formatNumber(TempPhone)
 
-                if(TempPhone.length == 11){
-                    phone = TempPhone.subSequence(0, 3).toString() + "-" + TempPhone.subSequence(3, 7).toString() + "-" + TempPhone.subSequence(7, 11).toString()
-                }
+
 
                 data.add(Phone(id, name, phone))
-                Log.d("myApp", "name: $name phone: {$phone}")
+                Log.d("myApp", "name: $name phone: {$phone} id: $id")
             }
         }
 

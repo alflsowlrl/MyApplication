@@ -106,16 +106,27 @@ class MainActivity : AppCompatActivity() {
 
     fun checkPermission() {
         // 1. 위험권한(Camera) 권한 승인상태 가져오기
-        val cameraPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)
+        val permissions = arrayOf(Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS)
+        val premissionInRequest: MutableList<String> = mutableListOf()
 
-        if (cameraPermission != PackageManager.PERMISSION_GRANTED) {
-            requestPermission()
+        for(permission in permissions){
+            Log.d("myApp", "${permission}: ${ContextCompat.checkSelfPermission(this, permission)}")
+            if(ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED){
+                premissionInRequest.add(permission)
+            }
         }
+
+        Log.d("myApp", "permission: ${premissionInRequest.size}")
+
+        if(premissionInRequest.isNotEmpty()){
+            requestPermission(premissionInRequest.toTypedArray())
+        }
+
     }
 
-    fun requestPermission() {
+    fun requestPermission(permissions: Array<String>) {
         // 2. 권한 요청
-        ActivityCompat.requestPermissions( this, arrayOf(Manifest.permission.READ_CONTACTS), MemoTab.MEMO_REQUEST_CODE)
+        ActivityCompat.requestPermissions( this, permissions, MemoTab.MEMO_REQUEST_CODE)
     }
 
     override fun onRequestPermissionsResult(

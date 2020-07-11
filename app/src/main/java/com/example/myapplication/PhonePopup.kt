@@ -2,6 +2,7 @@ package com.example.myapplication
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
 import android.provider.ContactsContract
@@ -9,6 +10,7 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.Window
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.example.myapplication.R
@@ -57,15 +59,22 @@ class PhonePopup : Activity() {
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        //바깥레이어 클릭시 안닫히게
-        return if (event.action == MotionEvent.ACTION_OUTSIDE) {
-            false
-        } else true
-    }
 
-    override fun onBackPressed() {
-        //안드로이드 백버튼 막기
-        return
+        when(event.action){
+            MotionEvent.ACTION_UP->{
+                val view = findViewById<LinearLayout>(R.id.phoneAddPopup)
+
+                var rect = Rect()
+                view.getLocalVisibleRect(rect)
+
+                if(!(rect.left < event.x && event.x < rect.right && rect.top < event.y && event.y < rect.bottom)){
+                    finish()
+                }
+            }
+        }
+
+
+        return true
     }
 
     private fun removePhone(phone: Phone) {

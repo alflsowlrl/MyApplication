@@ -1,26 +1,20 @@
 package com.example.myapplication
 
 import android.Manifest
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Button
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.sqlite.SqliteHelper
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.example.myapplication.galleryTab.GalleryTab
+import com.example.myapplication.memoTab.MemoTab
+import com.example.myapplication.phoneTab.PhoneTab
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.custom_tab_button.view.*
-import kotlinx.android.synthetic.main.phone_tab.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var mContext : Context

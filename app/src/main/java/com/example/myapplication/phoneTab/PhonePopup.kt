@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.example.myapplication.phoneTab
 
 import android.app.Activity
 import android.content.Intent
@@ -12,6 +12,7 @@ import android.view.Window
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import com.example.myapplication.R
 
 class PhonePopup : Activity() {
     var txtText: TextView? = null
@@ -118,11 +119,7 @@ class PhonePopup : Activity() {
             ContactsContract.Contacts.LOOKUP_KEY
         )
         var displayName: String? = null
-        var contentUri: Uri? = null
-        var id: Long? = null
 
-        // The index of the contact's _ID value
-        var idIndex: Int = 0
         // The lookup key from the Cursor
         var currentLookupKey: String? = null
         // The _ID value from the Cursor
@@ -138,13 +135,10 @@ class PhonePopup : Activity() {
             null,
             null
         )?.use { cursor ->
-            val idColumn = cursor.getColumnIndexOrThrow(ContactsContract.Contacts._ID)
-            val displayNameColumn =
-                cursor.getColumnIndexOrThrow(ContactsContract.Contacts.DISPLAY_NAME)
+            val displayNameColumn = cursor.getColumnIndexOrThrow(ContactsContract.Contacts.DISPLAY_NAME)
             val lookupKeyIndex = cursor.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY)
 
             while (cursor.moveToNext()) {
-                id = cursor.getLong(idColumn)
                 displayName = cursor.getString(displayNameColumn)
                 currentLookupKey = cursor.getString(lookupKeyIndex)
                 if (displayName != phone.name) {

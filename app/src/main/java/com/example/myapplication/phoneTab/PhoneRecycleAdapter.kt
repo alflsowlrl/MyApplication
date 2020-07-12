@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.example.myapplication.phoneTab
 
 import android.content.Intent
 import android.view.LayoutInflater
@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myapplication.R
 import kotlinx.android.synthetic.main.phone_recycler.view.*
 
 class PhoneRecycleAdapter: RecyclerView.Adapter<PhoneRecycleAdapter.PhoneHolder>() {

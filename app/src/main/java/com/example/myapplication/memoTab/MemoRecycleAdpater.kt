@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.example.myapplication.memoTab
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myapplication.R
 import com.example.sqlite.Memo
 import com.example.sqlite.SqliteHelper
 import kotlinx.android.synthetic.main.memo_item.view.*
@@ -44,7 +45,7 @@ class MemoRecycleAdapter(context: Context): RecyclerView.Adapter<MemoRecycleAdap
         return listData.size
     }
 
-    override fun onBindViewHolder(holder: com.example.myapplication.MemoRecycleAdapter.MemoHolder, position: Int) {
+    override fun onBindViewHolder(holder: MemoHolder, position: Int) {
         val memo = listData.get(position)
         holder.setMemo(memo)
     }

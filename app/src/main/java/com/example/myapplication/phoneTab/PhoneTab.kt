@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.example.myapplication.phoneTab
 
 import android.Manifest
 import android.content.Intent
@@ -11,10 +11,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myapplication.FragmentTab
+import com.example.myapplication.PermissionChecker
+import com.example.myapplication.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class PhoneTab(): FragmentTab(){
-    var phoneAdapter: PhoneRecycleAdapter = PhoneRecycleAdapter()
+    var phoneAdapter: PhoneRecycleAdapter =
+        PhoneRecycleAdapter()
     var recycleview: RecyclerView? = null
     private val PERMISSION_REQUEST_CODE = 99
 
@@ -64,7 +68,12 @@ class PhoneTab(): FragmentTab(){
 
         val permissions = arrayOf(Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS)
 
-        if(PermissionChecker.checkAndRequestPermissons(this, permissions, PERMISSION_REQUEST_CODE) == PermissionChecker.ALL_PERMISSION_GRANTED){
+        if(PermissionChecker.checkAndRequestPermissons(
+                this,
+                permissions,
+                PERMISSION_REQUEST_CODE
+            ) == PermissionChecker.ALL_PERMISSION_GRANTED
+        ){
             return loadData()
         }
         else{
@@ -111,7 +120,13 @@ class PhoneTab(): FragmentTab(){
 
 
 
-                data.add(Phone(id, name, phone))
+                data.add(
+                    Phone(
+                        id,
+                        name,
+                        phone
+                    )
+                )
             }
         }
 

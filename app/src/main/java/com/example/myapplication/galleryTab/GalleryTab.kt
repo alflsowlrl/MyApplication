@@ -1,11 +1,10 @@
-package com.example.myapplication
+package com.example.myapplication.galleryTab
 
 import android.Manifest
 import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +15,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.myapplication.FragmentTab
+import com.example.myapplication.PermissionChecker
+import com.example.myapplication.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -57,7 +59,12 @@ class GalleryTab(): FragmentTab(){
         val thisFragment = this
         GlobalScope.launch {
             var imageList = listOf<MediaStoreImage>()
-            val isAllgranted =  PermissionChecker.checkAndRequestPermissons(thisFragment, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), PERMISSION_REQUEST_CODE)
+            val isAllgranted =
+                PermissionChecker.checkAndRequestPermissons(
+                    thisFragment,
+                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                    PERMISSION_REQUEST_CODE
+                )
 
             if(isAllgranted){
                 imageList = queryImages()
@@ -88,10 +95,10 @@ class GalleryTab(): FragmentTab(){
                 MediaStore.Images.Media.DISPLAY_NAME,
                 MediaStore.Images.Media.DATE_TAKEN
             )
-            val selection = "${MediaStore.Images.Media.DATE_TAKEN} >= ?"
-            val selectionArgs = arrayOf(
-                dateToTimestamp(day = 1, month = 1, year = 1970).toString()
-            )
+//            val selection = "${MediaStore.Images.Media.DATE_TAKEN} >= ?"
+//            val selectionArgs = arrayOf(
+//                dateToTimestamp(day = 1, month = 1, year = 1970).toString()
+//            )
 
             val sortOrder = "${MediaStore.Images.Media.DATE_TAKEN} DESC"
 
@@ -117,7 +124,13 @@ class GalleryTab(): FragmentTab(){
                             id.toString()
                         )
 
-                        val image = MediaStoreImage(id, displayName, dateTaken, contentUri)
+                        val image =
+                            MediaStoreImage(
+                                id,
+                                displayName,
+                                dateTaken,
+                                contentUri
+                            )
                         images += image
                     }
                 }
@@ -134,12 +147,16 @@ class GalleryTab(): FragmentTab(){
         }
 
     private inner class GalleryAdapter :
-        ListAdapter<MediaStoreImage, ImageViewHolder>(MediaStoreImage.DiffCallback) {
+        ListAdapter<MediaStoreImage, ImageViewHolder>(
+            MediaStoreImage.DiffCallback
+        ) {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val view = layoutInflater.inflate(R.layout.gallery_recycler, parent, false)
-            return ImageViewHolder(view)
+            return ImageViewHolder(
+                view
+            )
         }
 
         override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {

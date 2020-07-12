@@ -14,8 +14,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".phoneAddActivity" />
-        <activity android:name=".PhonePopup" android:theme="@android:style/Theme.Dialog" />
+        <activity android:name=".phoneTab.phoneAddActivity" />
+        <activity android:name=".phoneTab.PhonePopup" android:theme="@android:style/Theme.Dialog" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,7 +23,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MemoAddActivity" />
+        <activity android:name=".memoTab.MemoAddActivity" />
 
     </application>
 

@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.example.myapplication.galleryTab
 
 import android.net.Uri
 import androidx.recyclerview.widget.DiffUtil

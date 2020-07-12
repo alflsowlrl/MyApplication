@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.example.myapplication.memoTab
 
 import android.app.Activity
 import android.content.Intent
@@ -10,6 +10,8 @@ import android.widget.Toast
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myapplication.FragmentTab
+import com.example.myapplication.R
 import com.example.sqlite.Memo
 import com.example.sqlite.SqliteHelper
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -27,7 +29,8 @@ class MemoTab(): FragmentTab(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.context?.let{
-            memoAdapter = MemoRecycleAdapter(it)
+            memoAdapter =
+                MemoRecycleAdapter(it)
             memoHelper = SqliteHelper(it, "memo", 1)
         }
     }
@@ -56,7 +59,9 @@ class MemoTab(): FragmentTab(){
         val floatingButton = view.findViewById<FloatingActionButton>(R.id.memoFloating)
         floatingButton.setOnClickListener {
             val intent = Intent(this.activity, MemoAddActivity::class.java)
-            activity?.startActivityForResult(intent, MEMO_REQUEST_CODE)
+            activity?.startActivityForResult(intent,
+                MEMO_REQUEST_CODE
+            )
         }
 
         return view
@@ -71,7 +76,7 @@ class MemoTab(): FragmentTab(){
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if(requestCode == MemoTab.MEMO_REQUEST_CODE && resultCode == Activity.RESULT_OK){
+        if(requestCode == MEMO_REQUEST_CODE && resultCode == Activity.RESULT_OK){
             ActivityResult(requestCode, resultCode, data)
         }
 

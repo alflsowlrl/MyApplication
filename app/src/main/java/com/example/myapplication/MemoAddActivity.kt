@@ -27,6 +27,7 @@ class MemoAddActivity : AppCompatActivity() {
             val add = Intent()
             add.putExtra("title", title)
             add.putExtra("time", formattedDate)
+
             setResult(Activity.RESULT_OK, add)
             finish()
         }

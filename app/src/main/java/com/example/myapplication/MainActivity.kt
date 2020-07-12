@@ -24,8 +24,6 @@ import kotlinx.android.synthetic.main.phone_tab.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var mContext : Context
-    private var memoTab: MemoTab = MemoTab(this)
-    var helper = SqliteHelper(this, "memo", 1)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,13 +59,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
     private fun initViewPager(){
-        memoTab = MemoTab(this)
-        val searchFragment = memoTab
+        val searchFragment = MemoTab()
         searchFragment.name = "메모 창"
 
-        val cameraFragment = GalleryTab(this)
+        val cameraFragment = GalleryTab()
         cameraFragment.name = "사진 창"
-        val callFragment = PhoneTab(this)
+        val callFragment = PhoneTab()
         callFragment.name = "전화 창"
 
 
@@ -99,9 +96,9 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if(requestCode == MemoTab.MEMO_REQUEST_CODE && resultCode == Activity.RESULT_OK){
-            memoTab?.ActivityResult(requestCode, resultCode, data)
-       }
+        for(fragment in supportFragmentManager.fragments){
+            fragment.onActivityResult(requestCode, resultCode, data)
+        }
     }
 
     fun checkPermission() {
@@ -110,13 +107,10 @@ class MainActivity : AppCompatActivity() {
         val premissionInRequest: MutableList<String> = mutableListOf()
 
         for(permission in permissions){
-            Log.d("myApp", "${permission}: ${ContextCompat.checkSelfPermission(this, permission)}")
             if(ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED){
                 premissionInRequest.add(permission)
             }
         }
-
-        Log.d("myApp", "permission: ${premissionInRequest.size}")
 
         if(premissionInRequest.isNotEmpty()){
             requestPermission(premissionInRequest.toTypedArray())
@@ -126,8 +120,13 @@ class MainActivity : AppCompatActivity() {
 
     fun requestPermission(permissions: Array<String>) {
         // 2. 권한 요청
+        for(permission in permissions){
+            if(ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED){
+            }
+        }
+
         ActivityCompat.requestPermissions( this, permissions, MemoTab.MEMO_REQUEST_CODE)
-    }
+}
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -144,8 +143,4 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-
-
-
 }

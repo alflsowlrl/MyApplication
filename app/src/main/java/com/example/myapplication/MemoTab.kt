@@ -3,7 +3,6 @@ package com.example.myapplication
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,13 +15,21 @@ import com.example.sqlite.SqliteHelper
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
-class MemoTab(activity: Activity): FragmentTab(){
-    private val parentActivity = activity
-    var memoAdapter = MemoRecycleAdapter(parentActivity)
-    var helper = SqliteHelper(parentActivity, "memo", 1)
+class MemoTab(): FragmentTab(){
+    var memoAdapter: MemoRecycleAdapter? = null
+    var memoHelper: SqliteHelper? = null
 
     companion object{
         const val MEMO_REQUEST_CODE = 99
+        const val TAG = "MemoTab"
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        this.context?.let{
+            memoAdapter = MemoRecycleAdapter(it)
+            memoHelper = SqliteHelper(it, "memo", 1)
+        }
     }
 
     override fun onCreateView(
@@ -30,41 +37,69 @@ class MemoTab(activity: Activity): FragmentTab(){
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         val view =inflater.inflate(R.layout.memo_tab, container, false)
-
-        val linearLayoutManager = LinearLayoutManager(parentActivity)
-
-
         var recycleview = view.findViewById<RecyclerView>(R.id.memoRecycleView)
+        val context = recycleview.context
+        val linearLayoutManager = LinearLayoutManager(this.activity)
 
-        memoAdapter.listData = helper.selectMemo()
+        val memos = memoHelper?.selectMemo()
+        memos?.let{
+            memoAdapter?.listData = it
+        }
+
         recycleview.adapter = memoAdapter
         recycleview.layoutManager = LinearLayoutManager(activity)
-        recycleview.addItemDecoration(DividerItemDecoration(parentActivity, linearLayoutManager.orientation))
+        recycleview.addItemDecoration(DividerItemDecoration(this.activity, linearLayoutManager.orientation))
 
-        Log.d("myApp", "size: ${memoAdapter.listData.size}")
 
         val floatingButton = view.findViewById<FloatingActionButton>(R.id.memoFloating)
         floatingButton.setOnClickListener {
-            val intent = Intent(parentActivity, MemoAddActivity::class.java)
-            parentActivity.startActivityForResult(intent, MEMO_REQUEST_CODE)
+            val intent = Intent(this.activity, MemoAddActivity::class.java)
+            activity?.startActivityForResult(intent, MEMO_REQUEST_CODE)
         }
 
         return view
     }
 
-    fun ActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onResume() {
+        super.onResume()
 
+        memoAdapter?.notifyDataSetChanged()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
+        if(requestCode == MemoTab.MEMO_REQUEST_CODE && resultCode == Activity.RESULT_OK){
+            ActivityResult(requestCode, resultCode, data)
+        }
+
+    }
+
+
+
+
+    fun ActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
             var title = data?.getStringExtra("title")?: ""
             var time = data?.getStringExtra("time")?: ""
 
-            Toast.makeText(parentActivity, "$title,$time", Toast.LENGTH_LONG).show()
+            Toast.makeText(this.activity, "$title,$time", Toast.LENGTH_LONG).show()
 
             val memo = Memo(null, title, time)
-            helper.insertMemo(memo)
-            memoAdapter.listData = helper.selectMemo()
+
+
+
+            this.context?.let{
+                memoHelper?.insertMemo(memo)
+
+                val memos = memoHelper?.selectMemo()
+                memos?.let{
+                    memoAdapter?.listData = it
+                }
+            }
+
         }
     }
 }

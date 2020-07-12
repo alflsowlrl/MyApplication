@@ -3,8 +3,6 @@ package com.example.myapplication
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
-import com.example.myapplication.FragmentTab
-import java.util.concurrent.CountDownLatch
 
 class PageAdapter(fm : FragmentManager) : FragmentStatePagerAdapter(fm){
     private var fragments : ArrayList<FragmentTab> = ArrayList()

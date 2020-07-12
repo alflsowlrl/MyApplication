@@ -6,14 +6,12 @@ import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
 import android.provider.ContactsContract
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.Window
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import com.example.myapplication.R
 
 class PhonePopup : Activity() {
     var txtText: TextView? = null
@@ -110,7 +108,6 @@ class PhonePopup : Activity() {
         // 찾은 Uri를 MediaStore에서 삭제
         contentUri?.let{
             contentResolver.delete(contentUri!!, null, null)
-            Log.d("myApp", "Removed $displayName from MediaStore: $contentUri")
         }
     }
 

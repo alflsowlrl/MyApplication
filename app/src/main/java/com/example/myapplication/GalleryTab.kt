@@ -1,11 +1,9 @@
 package com.example.myapplication
 
+import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.ContentResolver
 import android.net.Uri
 import android.os.Bundle
-import android.provider.ContactsContract
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,11 +13,9 @@ import android.widget.ImageView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.gallery_tab.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -27,13 +23,15 @@ import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
 
-class GalleryTab(activity: Activity): FragmentTab(){
-    private val parentActivity = activity
+class GalleryTab(): FragmentTab(){
+    private var galleryAdapter: GalleryAdapter? = null
+    private val PERMISSION_REQUEST_CODE = 99
     //private val contentResolver: ContentResolver? = null
 
     companion object {
         private const val READ_EXTERNAL_STORAGE_REQUEST = 0x1045
         const val TAG = "GalleryTab"
+        const val EXTERNAL_STORAGE_PERMISSION_REQUEST = 99
     }
 
     private val images = MutableLiveData<List<MediaStoreImage>>()
@@ -45,13 +43,8 @@ class GalleryTab(activity: Activity): FragmentTab(){
     ): View? {
         // 여기부터 갤러리
         val view =inflater.inflate(R.layout.gallery_tab, container, false)
-        val galleryAdapter = GalleryAdapter()
-
+        galleryAdapter = GalleryAdapter()
         showImages()
-
-        images.observe(this, Observer<List<MediaStoreImage>> { images ->
-            galleryAdapter.submitList(images)
-        })
 
         var recycleview = view.findViewById<RecyclerView>(R.id.gallery)
         recycleview.adapter = galleryAdapter
@@ -61,14 +54,33 @@ class GalleryTab(activity: Activity): FragmentTab(){
     }
 
     private fun showImages() {
+        val thisFragment = this
         GlobalScope.launch {
-            val imageList = queryImages()
+            var imageList = listOf<MediaStoreImage>()
+            val isAllgranted =  PermissionChecker.checkAndRequestPermissons(thisFragment, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), PERMISSION_REQUEST_CODE)
+
+            if(isAllgranted){
+                imageList = queryImages()
+            }
+
             images.postValue(imageList)
+        }
+
+        images.observe(this, Observer<List<MediaStoreImage>> { images ->
+            galleryAdapter?.submitList(images)
+        })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(galleryAdapter != null && galleryAdapter?.itemCount == 0){
+            showImages()
         }
     }
 
     private suspend fun queryImages(): List<MediaStoreImage> {
         val images = mutableListOf<MediaStoreImage>()
+        val thisFragment = this
 
         withContext(Dispatchers.IO) {
             val projection = arrayOf(
@@ -83,34 +95,35 @@ class GalleryTab(activity: Activity): FragmentTab(){
 
             val sortOrder = "${MediaStore.Images.Media.DATE_TAKEN} DESC"
 
-            val cursor = parentActivity.contentResolver.query( MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                projection,
-                null, // selection
-                null, // selectionArgs
-                sortOrder)?.use { cursor ->
 
-                val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
-                val dateTakenColumn =
-                    cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_TAKEN)
-                val displayNameColumn =
-                    cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME)
-                while (cursor.moveToNext()) {
-                    val id = cursor.getLong(idColumn)
-                    val dateTaken = Date(cursor.getLong(dateTakenColumn))
-                    val displayName = cursor.getString(displayNameColumn)
-                    val contentUri = Uri.withAppendedPath(
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                        id.toString()
-                    )
+            val cursor = thisFragment.activity?.let{
+                it.contentResolver.query( MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    projection,
+                    null, // selection
+                    null, // selectionArgs
+                    sortOrder)?.use { cursor ->
 
-                    val image = MediaStoreImage(id, displayName, dateTaken, contentUri)
-                    images += image
-                    Log.d(TAG, image.toString())
+                    val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
+                    val dateTakenColumn =
+                        cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_TAKEN)
+                    val displayNameColumn =
+                        cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME)
+                    while (cursor.moveToNext()) {
+                        val id = cursor.getLong(idColumn)
+                        val dateTaken = Date(cursor.getLong(dateTakenColumn))
+                        val displayName = cursor.getString(displayNameColumn)
+                        val contentUri = Uri.withAppendedPath(
+                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                            id.toString()
+                        )
+
+                        val image = MediaStoreImage(id, displayName, dateTaken, contentUri)
+                        images += image
+                    }
                 }
             }
         }
 
-        Log.d(TAG, "Found ${images.size} images")
         return images
     }
 

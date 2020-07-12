@@ -1,7 +1,6 @@
 package com.example.myapplication
 
-import android.app.Activity
-import android.util.Log
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,16 +9,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.sqlite.Memo
 import com.example.sqlite.SqliteHelper
 import kotlinx.android.synthetic.main.memo_item.view.*
-import kotlinx.android.synthetic.main.phone_recycler.view.*
 
 /**
  * Created by ysh on 2018-04-12.
  */
 
 
-class MemoRecycleAdapter(activity: Activity): RecyclerView.Adapter<MemoRecycleAdapter.MemoHolder>() {
+class MemoRecycleAdapter(context: Context): RecyclerView.Adapter<MemoRecycleAdapter.MemoHolder>() {
     var listData = mutableListOf<Memo>()
-    var helper = SqliteHelper(activity, "memo", 1)
+    var helper = SqliteHelper(context, "memo", 1)
     inner class MemoHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         var tvName: TextView
 

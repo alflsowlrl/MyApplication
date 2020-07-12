@@ -8,8 +8,9 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_tab.view.*
 
 
-open class FragmentTab : Fragment() {
+open class FragmentTab() : Fragment() {
     var name = ""
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

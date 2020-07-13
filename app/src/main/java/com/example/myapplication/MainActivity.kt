@@ -7,7 +7,10 @@ import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import android.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.myapplication.galleryTab.GalleryTab
@@ -25,10 +28,13 @@ class MainActivity : AppCompatActivity() {
 
         checkPermission()
 
+
+
         mContext = applicationContext
         initViewPager() // 뷰페이저와 어댑터 장착
 
     }
+
 
     private fun createView(tabName: String): View {
         var tabView = LayoutInflater.from(mContext).inflate(R.layout.custom_tab_button, null)
@@ -54,6 +60,7 @@ class MainActivity : AppCompatActivity() {
     }
     private fun initViewPager(){
         val searchFragment = MemoTab()
+
         searchFragment.name = "메모 창"
 
         val cameraFragment = GalleryTab()

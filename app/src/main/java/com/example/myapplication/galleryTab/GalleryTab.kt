@@ -2,15 +2,18 @@ package com.example.myapplication.galleryTab
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
+import android.widget.Toast
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
@@ -20,7 +23,6 @@ import com.bumptech.glide.Glide
 import com.example.myapplication.FragmentTab
 import com.example.myapplication.PermissionChecker
 import com.example.myapplication.R
-import kotlinx.android.synthetic.main.gallery_recycler.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -149,16 +151,37 @@ class GalleryTab(): FragmentTab(){
         }
 
     private inner class GalleryAdapter :
-        ListAdapter<MediaStoreImage, ImageViewHolder>(
+        ListAdapter<MediaStoreImage, GalleryAdapter.ImageViewHolder>(
             MediaStoreImage.DiffCallback
         ) {
+
+        private inner class ImageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+            val imageView: ImageView = view.findViewById(R.id.image)
+
+            init{
+                view.setOnLongClickListener {
+                    val mediaStoreImage = getItem(adapterPosition)
+                    Toast.makeText(view.context, "${mediaStoreImage.contentUri}", Toast.LENGTH_LONG).show()
+                    val prefix = "<Image>"
+                    val postfix = "</Image>"
+                    val clipText = prefix + mediaStoreImage.contentUri + postfix
+
+                    val clipboard: ClipboardManager = view.context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                    val clip: ClipData = ClipData.newPlainText("uri","$clipText")
+                    clipboard.setPrimaryClip(clip)
+
+                    true
+                }
+            }
+
+
+        }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val view = layoutInflater.inflate(R.layout.gallery_recycler, parent, false)
-            return ImageViewHolder(
-                view
-            )
+
+            return ImageViewHolder(view)
         }
 
         override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
@@ -171,10 +194,5 @@ class GalleryTab(): FragmentTab(){
                 .into(holder.imageView)
         }
 
-    }
-
-
-    private class ImageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val imageView: ImageView = view.findViewById(R.id.image)
     }
 }

@@ -1,20 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <androidx.appcompat.widget.Toolbar
+        android:background="@drawable/lines"
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:elevation="2dp"
+        android:minHeight="?attr/actionBarSize"
+        app:layout_constraintBottom_toTopOf="@+id/imagePreView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/toolbarTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:longClickable="false"
+            android:textStyle="bold"
+            android:textSize="17dp"
+            android:text="일기장" />
+
+    </androidx.appcompat.widget.Toolbar>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/memoRecycleView"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="0dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="0dp"
         android:layout_marginBottom="120dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
         tools:listitem="@layout/memo_item">
 
     </androidx.recyclerview.widget.RecyclerView>
@@ -27,12 +53,10 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="-5dp"
-        android:layout_marginRight="-5dp"
-        android:layout_marginBottom="213dp"
+        android:layout_marginBottom="210dp"
         android:src="@drawable/ic_content_new"
         app:backgroundTint="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="319dp" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

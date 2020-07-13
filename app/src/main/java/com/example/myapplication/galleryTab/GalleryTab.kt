@@ -8,9 +8,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.content.ContextCompat.getSystemService
@@ -49,6 +47,8 @@ class GalleryTab(): FragmentTab(){
     ): View? {
         // 여기부터 갤러리
         val view =inflater.inflate(R.layout.gallery_tab, container, false)
+
+
         galleryAdapter = GalleryAdapter()
         showImages()
 
@@ -58,6 +58,9 @@ class GalleryTab(): FragmentTab(){
 
         return view
     }
+
+
+
 
     private fun showImages() {
         val thisFragment = this
@@ -195,4 +198,9 @@ class GalleryTab(): FragmentTab(){
         }
 
     }
+
+    private class ImageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val imageView: ImageView = view.findViewById(R.id.image)
+    }
+
 }

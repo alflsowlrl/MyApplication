@@ -1,15 +1,19 @@
 package com.example.myapplication.memoTab
 
+import android.app.SearchManager
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import com.example.sqlite.Memo
 import com.example.sqlite.SqliteHelper
 import kotlinx.android.synthetic.main.memo_item.view.*
+import kotlinx.android.synthetic.main.phone_recycler.view.*
 
 /**
  * Created by ysh on 2018-04-12.
@@ -18,15 +22,24 @@ import kotlinx.android.synthetic.main.memo_item.view.*
 
 class MemoRecycleAdapter(context: Context): RecyclerView.Adapter<MemoRecycleAdapter.MemoHolder>() {
     var listData = mutableListOf<Memo>()
-    var helper = SqliteHelper(context, "memo", 1)
+    var helper = SqliteHelper(context, MemoConstant.MEMO_DB_NAME, MemoConstant.MEMO_DB_VERSION)
     inner class MemoHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         var tvName: TextView
 
         init {
             tvName = itemView.findViewById(R.id.mContextTextView)
             itemView.setOnLongClickListener {
-                removeMemo(listData[adapterPosition])
-                removeItemView(adapterPosition)
+
+                val id = listData[adapterPosition].no
+                val content = listData[adapterPosition].content
+//
+
+
+                val intent = Intent(itemView.context, MemoPopup::class.java)
+                intent.putExtra("content", content)
+                intent.putExtra("id", id)
+                itemView.context.startActivity(intent)
+
                 false
             }
         }

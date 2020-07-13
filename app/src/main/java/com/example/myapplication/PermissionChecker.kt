@@ -9,6 +9,9 @@ class PermissionChecker {
     companion object{
         const val ALL_PERMISSION_GRANTED = true
         const val NOT_ALL_PERMISSION_GRANTED = false
+        const val MAIN_PERMISSION_REQUEST_CODE = 80
+        const val CONTACT_PERMISSION_REQUEST_CODE = 81
+        const val GALLERY_PERMISSION_REQUEST_CODE = 82
 
         fun checkAndRequestPermissons(fragment: Fragment, permissions: Array<String>, requestCode: Int): Boolean{
             val premissionInRequest: MutableList<String> = mutableListOf()

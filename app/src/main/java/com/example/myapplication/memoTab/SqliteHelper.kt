@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import com.example.myapplication.memoTab.MemoConstant
 
 class SqliteHelper(context: Context, name: String, version: Int) :
     SQLiteOpenHelper(context, name, null, version) {
@@ -27,13 +28,13 @@ class SqliteHelper(context: Context, name: String, version: Int) :
         values.put("datetime", memo.datetime)
 
         val wd = writableDatabase
-        wd.insert("memo", null, values)
+        wd.insert(MemoConstant.MEMO_DB_NAME, null, values)
         wd.close()
     }
 
     fun selectMemo(): MutableList<Memo> {
         val list = mutableListOf<Memo>()
-        val select = "select * from memo"
+        val select = "select * from ${MemoConstant.MEMO_DB_NAME}"
         val rd = readableDatabase
         val cursor = rd.rawQuery(select, null)
         while (cursor.moveToNext()) {
@@ -55,7 +56,7 @@ class SqliteHelper(context: Context, name: String, version: Int) :
         values.put("datetime", memo.datetime)
 
         val wd = writableDatabase
-        wd.update("memo", values, "no = ${memo.no}", null)
+        wd.update(MemoConstant.MEMO_DB_NAME, values, "no = ${memo.no}", null)
         wd.close()
     }
 

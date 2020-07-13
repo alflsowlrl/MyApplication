@@ -4,10 +4,10 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.myapplication.galleryTab.GalleryTab
@@ -119,7 +119,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        ActivityCompat.requestPermissions( this, permissions, MemoTab.MEMO_REQUEST_CODE)
+        ActivityCompat.requestPermissions( this, permissions, PermissionChecker.MAIN_PERMISSION_REQUEST_CODE)
 }
 
     override fun onRequestPermissionsResult(
@@ -128,7 +128,7 @@ class MainActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         when(requestCode) {
-            MemoTab.MEMO_REQUEST_CODE -> {
+            PermissionChecker.MAIN_PERMISSION_REQUEST_CODE -> {
                 for (grantResult in grantResults) {
                     if (grantResult == PackageManager.PERMISSION_DENIED) {
                         finish()

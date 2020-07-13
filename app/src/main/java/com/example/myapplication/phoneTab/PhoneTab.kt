@@ -20,9 +20,6 @@ class PhoneTab(): FragmentTab(){
     var phoneAdapter: PhoneRecycleAdapter =
         PhoneRecycleAdapter()
     var recycleview: RecyclerView? = null
-    private val PERMISSION_REQUEST_CODE = 99
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -71,7 +68,7 @@ class PhoneTab(): FragmentTab(){
         if(PermissionChecker.checkAndRequestPermissons(
                 this,
                 permissions,
-                PERMISSION_REQUEST_CODE
+                PermissionChecker.CONTACT_PERMISSION_REQUEST_CODE
             ) == PermissionChecker.ALL_PERMISSION_GRANTED
         ){
             return loadData()
@@ -89,7 +86,7 @@ class PhoneTab(): FragmentTab(){
         grantResults: IntArray
     ) {
         when(requestCode) {
-           PERMISSION_REQUEST_CODE -> {
+            PermissionChecker.CONTACT_PERMISSION_REQUEST_CODE -> {
                 for (grantResult in grantResults) {
                     if (grantResult == PackageManager.PERMISSION_DENIED) {
                         activity?.finish()

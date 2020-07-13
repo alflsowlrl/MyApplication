@@ -22,7 +22,6 @@ class MemoTab(): FragmentTab(){
     var memoHelper: SqliteHelper? = null
 
     companion object{
-        const val MEMO_REQUEST_CODE = 99
         const val TAG = "MemoTab"
     }
 
@@ -31,7 +30,7 @@ class MemoTab(): FragmentTab(){
         this.context?.let{
             memoAdapter =
                 MemoRecycleAdapter(it)
-            memoHelper = SqliteHelper(it, "memo", 1)
+            memoHelper = SqliteHelper(it, MemoConstant.MEMO_DB_NAME, MemoConstant.MEMO_DB_VERSION)
         }
     }
 
@@ -59,9 +58,7 @@ class MemoTab(): FragmentTab(){
         val floatingButton = view.findViewById<FloatingActionButton>(R.id.memoFloating)
         floatingButton.setOnClickListener {
             val intent = Intent(this.activity, MemoAddActivity::class.java)
-            activity?.startActivityForResult(intent,
-                MEMO_REQUEST_CODE
-            )
+            activity?.startActivityForResult(intent, MemoConstant.MEMO_ADD_REQUEST_CODE)
         }
 
         return view
@@ -69,14 +66,17 @@ class MemoTab(): FragmentTab(){
 
     override fun onResume() {
         super.onResume()
-
+        val memos = memoHelper?.selectMemo()
+        memos?.let{
+            memoAdapter?.listData = it
+        }
         memoAdapter?.notifyDataSetChanged()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if(requestCode == MEMO_REQUEST_CODE && resultCode == Activity.RESULT_OK){
+        if(requestCode == MemoConstant.MEMO_ADD_REQUEST_CODE && resultCode == Activity.RESULT_OK){
             ActivityResult(requestCode, resultCode, data)
         }
 

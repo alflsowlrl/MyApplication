@@ -5,10 +5,12 @@ import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
@@ -18,6 +20,7 @@ import com.bumptech.glide.Glide
 import com.example.myapplication.FragmentTab
 import com.example.myapplication.PermissionChecker
 import com.example.myapplication.R
+import kotlinx.android.synthetic.main.gallery_recycler.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -27,7 +30,6 @@ import java.util.*
 
 class GalleryTab(): FragmentTab(){
     private var galleryAdapter: GalleryAdapter? = null
-    private val PERMISSION_REQUEST_CODE = 99
     //private val contentResolver: ContentResolver? = null
 
     companion object {
@@ -63,7 +65,7 @@ class GalleryTab(): FragmentTab(){
                 PermissionChecker.checkAndRequestPermissons(
                     thisFragment,
                     arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                    PERMISSION_REQUEST_CODE
+                    PermissionChecker.GALLERY_PERMISSION_REQUEST_CODE
                 )
 
             if(isAllgranted){
@@ -161,7 +163,6 @@ class GalleryTab(): FragmentTab(){
 
         override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
             val mediaStoreImage = getItem(position)
-
 
             Glide.with(holder.imageView)
                 .load(mediaStoreImage.contentUri)

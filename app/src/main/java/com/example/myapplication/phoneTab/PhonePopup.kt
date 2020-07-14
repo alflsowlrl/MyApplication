@@ -6,18 +6,22 @@ import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
 import android.provider.ContactsContract
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.Window
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.example.myapplication.R
+import kotlinx.android.synthetic.main.phone_recycler.*
 
 class PhonePopup : Activity() {
     var txtText: TextView? = null
     var phone: Phone? = null
     val defaultPhone = Phone(-100, "", "")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //타이틀바 없애기
@@ -53,6 +57,17 @@ class PhonePopup : Activity() {
         if(defaultPhone != phone){
             removePhone(phone!!)
         }
+        //액티비티(팝업) 닫기
+        finish()
+    }
+
+    //확인 버튼 클릭
+    fun mOnBookMark(v: View?) {
+        //데이터 전달하기
+        if(defaultPhone != phone){
+            bookmarkPhone(v)
+        }
+
         //액티비티(팝업) 닫기
         finish()
     }
@@ -160,5 +175,17 @@ class PhonePopup : Activity() {
 
         editIntent.putExtra("finishActivityOnSaveCompleted", true)
         ContextCompat.startActivity(this, editIntent, null)
+    }
+
+    private fun bookmarkPhone(view: View?) {
+        val layout = layoutInflater.inflate(R.layout.phone_recycler, null)
+        if(layout == null){
+            Log.d("myApp","null1")
+        }
+        val iv = layout.findViewById<ImageView>(R.id.userImg);
+        if(iv == null){
+            Log.d("myApp","null1")
+        }
+        iv.setImageResource(R.drawable.bookmark_user)
     }
 }

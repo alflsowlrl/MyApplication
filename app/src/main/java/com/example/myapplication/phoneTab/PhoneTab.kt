@@ -45,7 +45,6 @@ class PhoneTab(): FragmentTab(){
                 // Sets the MIME type to match the Contacts Provider
                 type = ContactsContract.RawContacts.CONTENT_TYPE
             }
-
             activity?.startActivity(intent)
         }
 

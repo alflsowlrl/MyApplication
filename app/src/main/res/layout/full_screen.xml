@@ -4,11 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".">
 
     <androidx.appcompat.widget.Toolbar
-        android:background="@drawable/lines"
+
         android:id="@+id/toolbar"
+        android:background="@drawable/lines"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:elevation="2dp"
@@ -26,39 +27,18 @@
             android:longClickable="false"
             android:textStyle="bold"
             android:textSize="17dp"
-            android:text="" />
+            android:text="갤러리" />
+
 
     </androidx.appcompat.widget.Toolbar>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/memoRecycleView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="60dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <ImageView
+        android:id="@+id/full"
+        android:layout_width="415dp"
+        android:layout_height="491dp"
+        android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        tools:listitem="@layout/memo_item">
-
-    </androidx.recyclerview.widget.RecyclerView>
-
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/memoFloating"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginBottom="80dp"
-        android:src="@drawable/ic_content_new"
-        app:backgroundTint="@color/colorAccent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
+        tools:srcCompat="@tools:sample/avatars" />
 </androidx.constraintlayout.widget.ConstraintLayout>

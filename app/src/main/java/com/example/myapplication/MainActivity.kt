@@ -28,8 +28,6 @@ class MainActivity : AppCompatActivity() {
 
         checkPermission()
 
-
-
         mContext = applicationContext
         initViewPager() // 뷰페이저와 어댑터 장착
 
@@ -104,7 +102,8 @@ class MainActivity : AppCompatActivity() {
 
     fun checkPermission() {
         // 1. 위험권한(Camera) 권한 승인상태 가져오기
-        val permissions = arrayOf(Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS, Manifest.permission.READ_EXTERNAL_STORAGE)
+        val permissions = arrayOf(Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS,
+            Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
         val premissionInRequest: MutableList<String> = mutableListOf()
 
         for(permission in permissions){

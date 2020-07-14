@@ -28,7 +28,7 @@ class MemoRecycleAdapter(context: Context): RecyclerView.Adapter<MemoRecycleAdap
 
         init {
             tvName = itemView.findViewById(R.id.mContextTextView)
-            itemView.setOnLongClickListener {
+            itemView.setOnClickListener {
 
                 val id = listData[adapterPosition].no
                 val content = listData[adapterPosition].content
@@ -42,7 +42,19 @@ class MemoRecycleAdapter(context: Context): RecyclerView.Adapter<MemoRecycleAdap
                 intent.putExtra(MemoConstant.MEMO_REQUEST_TYPE_KEY, MemoConstant.MEMO_MOD_REQUEST_TYPE)
                 itemView.context.startActivity(intent)
 
-                false
+                true
+            }
+
+            itemView.setOnLongClickListener {
+                val id = listData[adapterPosition].no
+                val title = listData[adapterPosition].title
+
+                val intent = Intent(itemView.context, MemoPopup::class.java)
+                intent.putExtra("title", title)
+                intent.putExtra("id", id)
+                itemView.context.startActivity(intent)
+
+                true
             }
         }
         fun setMemo(memo: Memo){

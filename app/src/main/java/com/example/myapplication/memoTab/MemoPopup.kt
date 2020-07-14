@@ -32,10 +32,10 @@ class MemoPopup : Activity() {
         setContentView(R.layout.activity_memo_popup)
 
         val view = findViewById<TextView>(R.id.memoText)
-        val content = intent.getStringExtra("content")?: ""
+        val title = intent.getStringExtra("title")?: ""
         val id = intent.getLongExtra("id", MemoConstant.DEFAULT_MEMO_ID)
-        view.text = "$id: $content"
-        memo = Memo(id, "", content, "")
+        view.text = "$title\n삭제하시겠습니까?"
+        memo = Memo(id, "", "", "")
     }
 
 
@@ -67,6 +67,10 @@ class MemoPopup : Activity() {
             removeMemo(memo!!)
         }
         //액티비티(팝업) 닫기
+        finish()
+    }
+
+    fun memoCancel(v: View?){
         finish()
     }
 

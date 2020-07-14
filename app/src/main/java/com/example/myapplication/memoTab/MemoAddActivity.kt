@@ -26,6 +26,10 @@ class MemoAddActivity : Activity() {
     private var title: String? = null
     private var formattedDate: String? = null
     val imageList = mutableMapOf<String, Drawable>()
+
+    companion object{
+        const val MAX_IMAGE_LIST_SIZE = 2
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_memo_add)
@@ -53,7 +57,7 @@ class MemoAddActivity : Activity() {
 
                 editText.setText(content.toString())
                 editTitle.setText(memoTitle.toString())
-                changeTextToImage(editText.text)
+                changeTextToImage(editText.text, editText.text.toString(), 0)
             }
             else->{
                 Log.d("memoSub", "this is error")
@@ -90,38 +94,49 @@ class MemoAddActivity : Activity() {
 
         editText?.addTextChangedListener(object: TextWatcher{
             override fun afterTextChanged(p0: Editable?) {
-                changeTextToImage(p0)
+                changeTextToImage(editText.text, editText.text.toString(), 0)
             }
 
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
             }
 
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
+            override fun onTextChanged(p0: CharSequence?, start: Int, before: Int, count: Int) {
+                val string = p0?.substring(start, start + count)
+                Log.d("memoApp", "string: $string")
+//                string?.let{changeTextToImage(editText.text, string, start)}
             }
         })
     }
 
-    private fun changeTextToImage(p0: Editable?){
+    private fun changeTextToImage(p0: Editable?, text: String, textStart: Int){
         val regex = Regex("""<Image>content://media/external/images/media/(\d+)</Image>""")
         var image: Drawable? = null
-        var matchResult = regex.findAll(p0.toString())
+        var matchResult = regex.findAll(text)
 
         Log.d("memoApp", "size: ${matchResult.count()}")
 
         for(image in imageList){
             val uriWithTag = "<Image>"+image.key+"</Image>"
-            if(uriWithTag !in p0.toString()){
+            if(uriWithTag !in text){
                 imageList.remove(image.key)
             }
         }
 
+        var matchCount = 0
         for(match in matchResult){
-            val start = match.range.start
-            val end = match.range.last + 1
-            val uriString = p0.toString().subSequence(match.range.start + 7, match.range.last - 7).toString()
-            Log.d("memoApp", "start: ${start} last: ${end} content: ${uriString}")
+            val start = match.range.start + textStart
+            val end = match.range.last + 1 + textStart
+            val uriString = text.subSequence(match.range.start + 7, match.range.last - 7).toString()
+
+            matchCount += 1
+            Log.d("memoAdd", "count: ${matchResult.count()}")
+            if(matchCount > MAX_IMAGE_LIST_SIZE){
+                p0?.delete(start, end)
+                Toast.makeText(this, "최대 이미지 개수는 ${MAX_IMAGE_LIST_SIZE}개입니다.", Toast.LENGTH_LONG).show()
+                continue
+            }
+
 
             if((uriString !in imageList.keys)){
                 val uri = Uri.parse(uriString)
@@ -130,15 +145,11 @@ class MemoAddActivity : Activity() {
                 image = Drawable.createFromStream(inputStream, uri.toString())
                 image.setBounds(0, 0, 300, 300)
 
-                if(image != null){
-                    imageList[uriString] = image
-                }
+                imageList[uriString] = image
             }
             else{
                 image = imageList[uriString]
             }
-
-            Log.d("memoApp", "${image.toString()}")
 
             val span = p0 as Spannable
             image?.let{span.setSpan(ImageSpan(it), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)}

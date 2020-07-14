@@ -258,7 +258,7 @@ class GalleryTab(): FragmentTab() {
 
                 imageView.setOnLongClickListener {
                     val mediaStoreImage = getItem(adapterPosition)
-                    Toast.makeText(view.context, "${mediaStoreImage.contentUri}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(view.context, "${mediaStoreImage.displayName} 복사되었습니다.", Toast.LENGTH_LONG).show()
                     val prefix = "<Image>"
                     val postfix = "</Image>"
                     val clipText = prefix + mediaStoreImage.contentUri + postfix

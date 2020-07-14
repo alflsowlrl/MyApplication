@@ -12,6 +12,7 @@ class SqliteHelper(context: Context, name: String, version: Int) :
     override fun onCreate(db: SQLiteDatabase?) {
         val create = "create table memo (" +
                 "no integer primary key, " +
+                "memoTitle text, " +
                 "content text, " +
                 "datetime integer" +
                 ")"
@@ -24,6 +25,7 @@ class SqliteHelper(context: Context, name: String, version: Int) :
 
     fun insertMemo(memo:Memo) {
         val values = ContentValues()
+        values.put("memoTitle", memo.title)
         values.put("content", memo.content)
         values.put("datetime", memo.datetime)
 
@@ -39,10 +41,11 @@ class SqliteHelper(context: Context, name: String, version: Int) :
         val cursor = rd.rawQuery(select, null)
         while (cursor.moveToNext()) {
             val no = cursor.getLong(cursor.getColumnIndex("no"))
+            val title = cursor.getString(cursor.getColumnIndex("memoTitle"))
             val content = cursor.getString(cursor.getColumnIndex("content"))
             val datetime = cursor.getString(cursor.getColumnIndex("datetime"))
 
-            list.add(Memo(no, content, datetime))
+            list.add(Memo(no, title, content, datetime))
         }
 
         cursor.close()
@@ -52,6 +55,7 @@ class SqliteHelper(context: Context, name: String, version: Int) :
 
     fun updateMemo(memo:Memo) {
         val values = ContentValues()
+        values.put("memoTitle", memo.title)
         values.put("content", memo.content)
         values.put("datetime", memo.datetime)
 
@@ -68,4 +72,4 @@ class SqliteHelper(context: Context, name: String, version: Int) :
     }
 }
 
-data class Memo(var no:Long?, var content:String, var datetime:String)
+data class Memo(var no:Long?,var title: String, var content:String, var datetime:String)

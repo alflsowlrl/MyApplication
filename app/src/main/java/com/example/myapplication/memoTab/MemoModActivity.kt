@@ -48,7 +48,7 @@ class MemoModActivity : AppCompatActivity() {
 
 
             val helper = SqliteHelper(this, MemoConstant.MEMO_DB_NAME, MemoConstant.MEMO_DB_VERSION)
-            helper.updateMemo(Memo(id, title, formattedDate))
+            helper.updateMemo(Memo(id, "", title, formattedDate))
 
             finish()
         }

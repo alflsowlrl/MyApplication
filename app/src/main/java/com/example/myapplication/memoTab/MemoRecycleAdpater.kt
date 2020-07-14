@@ -32,12 +32,13 @@ class MemoRecycleAdapter(context: Context): RecyclerView.Adapter<MemoRecycleAdap
 
                 val id = listData[adapterPosition].no
                 val content = listData[adapterPosition].content
-//
+                val title = listData[adapterPosition].title
 
 
                 val intent = Intent(itemView.context, MemoAddActivity::class.java)
                 intent.putExtra("content", content)
                 intent.putExtra("id", id)
+                intent.putExtra("title", title)
                 intent.putExtra(MemoConstant.MEMO_REQUEST_TYPE_KEY, MemoConstant.MEMO_MOD_REQUEST_TYPE)
                 itemView.context.startActivity(intent)
 
@@ -45,7 +46,7 @@ class MemoRecycleAdapter(context: Context): RecyclerView.Adapter<MemoRecycleAdap
             }
         }
         fun setMemo(memo: Memo){
-            itemView.mContextTextView.text = memo.content
+            itemView.mContextTextView.text = memo.title
             itemView.mContextTextViewTime.text = memo.datetime
         }
     }

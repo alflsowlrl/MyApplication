@@ -30,36 +30,6 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginRight="15dp"
-        android:background="@color/colorGray"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar">
-
-        <Space
-            android:layout_width="15dp"
-            android:layout_height="match_parent" />
-
-        <EditText
-            android:id="@+id/memoAddTextTitle"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@color/colorGray"
-            android:ems="10"
-            android:hint="title"
-            android:inputType="textPersonName" />
-
-    </LinearLayout>
-
     <Button
         android:id="@+id/memoAddFinish"
         android:layout_width="wrap_content"
@@ -71,46 +41,43 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+    <EditText
+        android:id="@+id/memoAddTextTitle"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
         android:layout_marginStart="15dp"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="40dp"
         android:layout_marginEnd="15dp"
         android:layout_marginRight="15dp"
+        android:padding="10dp"
+        android:background="@drawable/memo_edit_background"
+        android:ems="10"
+        android:hint="title"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+    <EditText
+        android:id="@+id/memoAddTextContent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="10dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginRight="15dp"
         android:layout_marginBottom="50dp"
-        android:background="@color/colorGray"
-        android:orientation="vertical"
+        android:background="@drawable/memo_edit_background"
+        android:bufferType="spannable"
+        android:gravity="start"
+        android:hint="content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="15dp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <Space
-                android:layout_width="15dp"
-                android:layout_height="match_parent" />
-
-            <EditText
-                android:id="@+id/memoAddTextContent"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/colorGray"
-                android:bufferType="spannable"
-                android:gravity="start"
-                android:hint="content" />
-        </LinearLayout>
-
-    </LinearLayout>
+        app:layout_constraintTop_toBottomOf="@+id/memoAddTextTitle"
+        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

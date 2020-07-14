@@ -35,7 +35,7 @@ class MemoPopup : Activity() {
         val content = intent.getStringExtra("content")?: ""
         val id = intent.getLongExtra("id", MemoConstant.DEFAULT_MEMO_ID)
         view.text = "$id: $content"
-        memo = Memo(id, content, "")
+        memo = Memo(id, "", content, "")
     }
 
 

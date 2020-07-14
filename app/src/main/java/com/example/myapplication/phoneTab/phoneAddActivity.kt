@@ -21,7 +21,7 @@ class phoneAddActivity : AppCompatActivity() {
         // Creates a new Intent to insert a contact
         val intent = Intent(ContactsContract.Intents.Insert.ACTION).apply {
             // Sets the MIME type to match the Contacts Provider
-            type = ContactsContract.RawContacts.CONTENT_TYPE
+            type = ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE
         }
 
         intent.apply {

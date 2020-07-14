@@ -37,6 +37,7 @@ class MemoModActivity : AppCompatActivity() {
         if(id == MemoConstant.DEFAULT_MEMO_ID){
             Toast.makeText(this, "메모가 존재 하지 않습니다", Toast.LENGTH_LONG).show()
             finish()
+
         }
 
         val btn = findViewById<Button>(R.id.memoModFinish)

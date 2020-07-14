@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.telephony.PhoneNumberUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,8 +32,7 @@ class PhoneTab(): FragmentTab(){
         recycleview  = view.findViewById<RecyclerView>(R.id.PhoneRecycleView)
         val data:MutableList<Phone> = loadDataWithPermissionCheck()
 
-
-        phoneAdapter.listData = data
+        phoneAdapter.setList(data)
         recycleview?.adapter = phoneAdapter
         recycleview?.layoutManager = LinearLayoutManager(activity)
 
@@ -55,7 +55,8 @@ class PhoneTab(): FragmentTab(){
         super.onResume()
 
         val data:MutableList<Phone> = loadDataWithPermissionCheck()
-        phoneAdapter.listData = data
+
+        phoneAdapter.setList(data)
         recycleview?.adapter = phoneAdapter
         recycleview?.layoutManager = LinearLayoutManager(activity)
 

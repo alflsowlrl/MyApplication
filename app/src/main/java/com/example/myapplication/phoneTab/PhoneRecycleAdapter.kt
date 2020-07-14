@@ -64,7 +64,6 @@ class PhoneRecycleAdapter: RecyclerView.Adapter<PhoneRecycleAdapter.PhoneHolder>
         fun setPhone(phone: Pair<Phone, Int>){
             itemView.textTitle.text = phone.first.name
             itemView.textDate.text = phone.first.phoneNumber
-            Log.d("phoneApp", "${phone.first.name} ${phone.first.id} ${phone.second}")
             val imageView = itemView.findViewById<ImageView>(R.id.phoneImageView)
             when(phone.second){
                 PhonePriority.HIGH_PRIORITY->{
@@ -108,6 +107,19 @@ class PhoneRecycleAdapter: RecyclerView.Adapter<PhoneRecycleAdapter.PhoneHolder>
         return false
     }
 
+    fun isPhoneinPhoneBookWithMod(id: Int, phoneBook: MutableList<Phone>): Boolean{
+        val itr = phoneBook.iterator()
+        while(itr.hasNext()){
+            val elem = itr.next()
+            if(id == elem.id){
+
+                return true
+            }
+        }
+
+        return false
+    }
+
     fun setList(list: MutableList<Phone>){
         for(phone in list){
             val isInList = checkIsinList(phone)
@@ -119,7 +131,19 @@ class PhoneRecycleAdapter: RecyclerView.Adapter<PhoneRecycleAdapter.PhoneHolder>
         val itr = listData.iterator()
         while(itr.hasNext()){
             val phone = itr.next()
-            if(phone.first !in list){
+            var isInphoneBook = false
+
+            val itrIn = list.iterator()
+            while(itrIn.hasNext()){
+                val elem = itrIn.next()
+                if(phone.first.id == elem.id){
+                    phone.first.name = elem.name
+                    phone.first.phoneNumber = elem.phoneNumber
+                    isInphoneBook = true
+                }
+            }
+
+            if(!isInphoneBook) {
                 itr.remove()
             }
         }
@@ -129,7 +153,6 @@ class PhoneRecycleAdapter: RecyclerView.Adapter<PhoneRecycleAdapter.PhoneHolder>
     }
 
     fun changePriority(id: Int, priority: Int){
-        Log.d("phoneApp", "found: $id")
         for(i in 0 until listData.size){
             if(id == listData[i].first.id){
 

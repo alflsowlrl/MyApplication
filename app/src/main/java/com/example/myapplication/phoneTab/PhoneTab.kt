@@ -42,7 +42,6 @@ class PhoneTab(): FragmentTab(){
                 // Sets the MIME type to match the Contacts Provider
                 type = ContactsContract.RawContacts.CONTENT_TYPE
             }
-
             activity?.startActivity(intent)
         }
 
@@ -56,7 +55,11 @@ class PhoneTab(): FragmentTab(){
 
         val data:MutableList<Phone> = loadDataWithPermissionCheck()
 
+        Log.d("myPhone", "size: ${data.size}")
+
         phoneAdapter.setList(data)
+
+        Log.d("myPhone", "size after: ${phoneAdapter.listData.size}")
         recycleview?.adapter = phoneAdapter
         recycleview?.layoutManager = LinearLayoutManager(activity)
 

@@ -2,16 +2,19 @@ package com.example.myapplication.galleryTab
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
+import android.app.Activity
+import android.content.*
+import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.view.*
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
@@ -21,14 +24,16 @@ import com.bumptech.glide.Glide
 import com.example.myapplication.FragmentTab
 import com.example.myapplication.PermissionChecker
 import com.example.myapplication.R
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
-class GalleryTab(): FragmentTab(){
+class GalleryTab(): FragmentTab() {
     private var galleryAdapter: GalleryAdapter? = null
     //private val contentResolver: ContentResolver? = null
 
@@ -48,7 +53,6 @@ class GalleryTab(): FragmentTab(){
         // 여기부터 갤러리
         val view =inflater.inflate(R.layout.gallery_tab, container, false)
 
-
         galleryAdapter = GalleryAdapter()
         showImages()
 
@@ -56,11 +60,86 @@ class GalleryTab(): FragmentTab(){
         recycleview.adapter = galleryAdapter
         recycleview.layoutManager = GridLayoutManager(activity,3)
 
+        val floatingButton = view.findViewById<FloatingActionButton>(R.id.galleryFloating)
+        floatingButton.setOnClickListener {
+            openCaemra()
+        }
+
         return view
     }
 
+    // ---------------- 여기부터 카메라 --------------- //
+    fun openCaemra(){
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        startActivityForResult(intent, 99)
+    }
 
+    fun saveImageFile(filename: String, mimeType: String, bitmap: Bitmap) : Uri? {
+        var values = ContentValues()
+        values.put(MediaStore.Images.Media.DISPLAY_NAME, filename)
+        values.put(MediaStore.Images.Media.MIME_TYPE, mimeType)
 
+        val c = Calendar.getInstance().time
+        values.put(MediaStore.Images.Media.DATE_TAKEN, c.time)
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+            values.put(MediaStore.Images.Media.IS_PENDING, 1)
+        }
+
+        val uri = activity?.contentResolver?.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+
+        try {
+            if (uri != null){
+                var descriptor = activity?.contentResolver?.openFileDescriptor(uri, "w")
+                if (descriptor != null){
+                    val fos = FileOutputStream(descriptor.fileDescriptor)
+                    //quality 화질
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos)
+                    fos.close()
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+                        values.clear()
+                        values.put(MediaStore.Images.Media.IS_PENDING, 0)
+                        if (uri != null) {
+                            activity?.contentResolver?.update(uri, values, null, null)
+                        }
+                    }
+                }
+            }
+        }catch (e:java.lang.Exception){
+            Log.e("File", "error=${e.localizedMessage}")
+        }
+        return uri
+    }
+
+    fun newFileName() : String{
+        val sdf = java.text.SimpleDateFormat("yyyyMMdd_HHmmss")
+        val filename = sdf.format(System.currentTimeMillis())
+
+        return "$filename.jpg"
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK){
+            when(requestCode){
+                99 -> {
+                    if (data?.extras?.get("data") != null){
+                        val bitmap = data?.extras?.get("data") as Bitmap
+                        val uri = saveImageFile(newFileName(), "image/jpg", bitmap)
+
+                        // 찍은 사진 크게 보기
+                        val intent = Intent(activity, FullScreen::class.java)
+                        intent.putExtra("img", uri.toString())
+                        startActivity(intent)
+
+                        // 찍은 사진 포함 갱신
+                        showImages()
+                    }
+                }
+            }
+        }
+    }
+    // ----------------------여기까지 카메라-------------------- //
 
     private fun showImages() {
         val thisFragment = this
@@ -109,7 +188,6 @@ class GalleryTab(): FragmentTab(){
 
             val sortOrder = "${MediaStore.Images.Media.DATE_TAKEN} DESC"
 
-
             val cursor = thisFragment.activity?.let{
                 it.contentResolver.query( MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                     projection,
@@ -138,14 +216,16 @@ class GalleryTab(): FragmentTab(){
                                 dateTaken,
                                 contentUri
                             )
+
                         images += image
                     }
                 }
             }
         }
-
         return images
     }
+
+
 
     @SuppressLint("SimpleDateFormat")
     private fun dateToTimestamp(day: Int, month: Int, year: Int): Long =
@@ -162,7 +242,21 @@ class GalleryTab(): FragmentTab(){
             val imageView: ImageView = view.findViewById(R.id.image)
 
             init{
-                view.setOnLongClickListener {
+                imageView.setOnClickListener {
+                    var imageMediaStore = getItem(adapterPosition)
+                    val str = adapterPosition.toString()
+                    Log.d("tab position", str)
+
+
+                    val uri = imageMediaStore.contentUri
+
+                    val intent = Intent(activity, FullScreen::class.java)
+                    intent.putExtra("img", uri.toString())
+                    intent.putExtra("position", adapterPosition)
+                    startActivity(intent)
+                }
+
+                imageView.setOnLongClickListener {
                     val mediaStoreImage = getItem(adapterPosition)
                     Toast.makeText(view.context, "${mediaStoreImage.contentUri}", Toast.LENGTH_LONG).show()
                     val prefix = "<Image>"
@@ -175,9 +269,8 @@ class GalleryTab(): FragmentTab(){
 
                     true
                 }
+
             }
-
-
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
@@ -197,10 +290,6 @@ class GalleryTab(): FragmentTab(){
                 .into(holder.imageView)
         }
 
-    }
 
-    private class ImageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val imageView: ImageView = view.findViewById(R.id.image)
     }
-
 }

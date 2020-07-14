@@ -28,8 +28,6 @@ class MainActivity : AppCompatActivity() {
 
         checkPermission()
 
-
-
         mContext = applicationContext
         initViewPager() // 뷰페이저와 어댑터 장착
 
@@ -41,15 +39,15 @@ class MainActivity : AppCompatActivity() {
 
         tabView.tab_text.text = tabName
         when (tabName) {
-            "메모" -> {
+            "일기장" -> {
                 tabView.tab_logo.setImageResource(android.R.drawable.ic_menu_edit)
                 return tabView
             }
-            "사진" -> {
+            "갤러리" -> {
                 tabView.tab_logo.setImageResource(android.R.drawable.ic_menu_camera)
                 return tabView
             }
-            "전화" -> {
+            "연락처" -> {
                 tabView.tab_logo.setImageResource(android.R.drawable.ic_menu_call)
                 return tabView
             }
@@ -61,27 +59,28 @@ class MainActivity : AppCompatActivity() {
     private fun initViewPager(){
         val searchFragment = MemoTab()
 
-        searchFragment.name = "메모 창"
+        searchFragment.name = "일기장"
 
         val cameraFragment = GalleryTab()
-        cameraFragment.name = "사진 창"
+        cameraFragment.name = "갤러리"
         val callFragment = PhoneTab()
-        callFragment.name = "전화 창"
+        callFragment.name = "연락처"
 
 
 
         val adapter = PageAdapter(supportFragmentManager) // PageAdapter 생성
-        adapter.addItems(searchFragment)
-        adapter.addItems(cameraFragment)
         adapter.addItems(callFragment)
+        adapter.addItems(cameraFragment)
+        adapter.addItems(searchFragment)
+
 
         main_viewPager.adapter = adapter // 뷰페이저에 adapter 장착
         main_tablayout.setupWithViewPager(main_viewPager) // 탭레이아웃과 뷰페이저를 연동
 
 
-        main_tablayout.getTabAt(0)?.setCustomView(createView("메모"))
-        main_tablayout.getTabAt(1)?.setCustomView(createView("사진"))
-        main_tablayout.getTabAt(2)?.setCustomView(createView("전화"))
+        main_tablayout.getTabAt(0)?.setCustomView(createView("연락처"))
+        main_tablayout.getTabAt(1)?.setCustomView(createView("갤러리"))
+        main_tablayout.getTabAt(2)?.setCustomView(createView("일기장"))
 
 //        main_tablayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
 //            override fun onTabReselected(p0: TabLayout.Tab?) {}
@@ -104,7 +103,8 @@ class MainActivity : AppCompatActivity() {
 
     fun checkPermission() {
         // 1. 위험권한(Camera) 권한 승인상태 가져오기
-        val permissions = arrayOf(Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS, Manifest.permission.READ_EXTERNAL_STORAGE)
+        val permissions = arrayOf(Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS,
+            Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
         val premissionInRequest: MutableList<String> = mutableListOf()
 
         for(permission in permissions){

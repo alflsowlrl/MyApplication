@@ -3,6 +3,7 @@ package com.example.myapplication.memoTab
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -58,7 +59,8 @@ class MemoTab(): FragmentTab(){
         val floatingButton = view.findViewById<FloatingActionButton>(R.id.memoFloating)
         floatingButton.setOnClickListener {
             val intent = Intent(this.activity, MemoAddActivity::class.java)
-            activity?.startActivityForResult(intent, MemoConstant.MEMO_ADD_REQUEST_CODE)
+            intent.putExtra(MemoConstant.MEMO_REQUEST_TYPE_KEY, MemoConstant.MEMO_ADD_REQUEST_TYPE)
+            activity?.startActivity(intent)
         }
 
         return view
@@ -73,39 +75,39 @@ class MemoTab(): FragmentTab(){
         memoAdapter?.notifyDataSetChanged()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if(requestCode == MemoConstant.MEMO_ADD_REQUEST_CODE && resultCode == Activity.RESULT_OK){
-            ActivityResult(requestCode, resultCode, data)
-        }
-
-    }
-
-
-
-
-    fun ActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == Activity.RESULT_OK) {
-            var title = data?.getStringExtra("title")?: ""
-            var time = data?.getStringExtra("time")?: ""
-
-            Toast.makeText(this.activity, "$title,$time", Toast.LENGTH_LONG).show()
-
-            val memo = Memo(null, title, time)
-
-
-
-            this.context?.let{
-                memoHelper?.insertMemo(memo)
-
-                val memos = memoHelper?.selectMemo()
-                memos?.let{
-                    memoAdapter?.listData = it
-                }
-            }
-
-        }
-    }
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//
+//        if(requestCode == MemoConstant.MEMO_ADD_REQUEST_CODE && resultCode == Activity.RESULT_OK){
+//            ActivityResult(requestCode, resultCode, data)
+//        }
+//
+//    }
+//
+//
+//
+//
+//    fun ActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        if (resultCode == Activity.RESULT_OK) {
+//            var title = data?.getStringExtra("title")?: ""
+//            var time = data?.getStringExtra("time")?: ""
+//
+//            Toast.makeText(this.activity, "$title,$time", Toast.LENGTH_LONG).show()
+//
+//            val memo = Memo(null, title, time)
+//
+//
+//
+//            this.context?.let{
+//                memoHelper?.insertMemo(memo)
+//
+//                val memos = memoHelper?.selectMemo()
+//                memos?.let{
+//                    memoAdapter?.listData = it
+//                }
+//            }
+//
+//        }
+//    }
 }
 

@@ -35,9 +35,10 @@ class MemoRecycleAdapter(context: Context): RecyclerView.Adapter<MemoRecycleAdap
 //
 
 
-                val intent = Intent(itemView.context, MemoPopup::class.java)
+                val intent = Intent(itemView.context, MemoAddActivity::class.java)
                 intent.putExtra("content", content)
                 intent.putExtra("id", id)
+                intent.putExtra(MemoConstant.MEMO_REQUEST_TYPE_KEY, MemoConstant.MEMO_MOD_REQUEST_TYPE)
                 itemView.context.startActivity(intent)
 
                 false
